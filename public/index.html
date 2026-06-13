@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TRON PDF Reporting System</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- 백그라운드 그라데이션 장식 -->
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+
+  <div class="app-container">
+    <!-- 헤더 -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-logo">
+          <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        </div>
+        <div>
+          <h1>TRON PDF Report</h1>
+          <p>Server-side High-Precision PDF Engine</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- 테마 전환 토글 -->
+        <button id="theme-toggle" class="theme-btn" aria-label="테마 전환">
+          <!-- 해 (라이트모드) 아이콘 -->
+          <svg class="sun-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <!-- 달 (다크모드) 아이콘 -->
+          <svg class="moon-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- 메인 레이아웃 -->
+    <main class="app-main">
+      
+      <!-- 왼쪽: 에디터 패널 -->
+      <section class="editor-section">
+        
+        <!-- 템플릿 선택 카드 -->
+        <div class="glass-card">
+          <h2 class="card-title">1. 리포트 템플릿 선택</h2>
+          <div class="template-selector">
+            <button class="template-tab active" data-template="invoice">
+              <div class="tab-icon">🧾</div>
+              <div class="tab-info">
+                <h3>비즈니스 송장</h3>
+                <p>Invoice & Billing</p>
+              </div>
+            </button>
+            <button class="template-tab" data-template="monthly_sales">
+              <div class="tab-icon">📈</div>
+              <div class="tab-info">
+                <h3>월간 매출 보고서</h3>
+                <p>Monthly Sales Report</p>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- 데이터 입력 카드 -->
+        <div class="glass-card">
+          <h2 class="card-title">2. 데이터 상세 설정</h2>
+          
+          <!-- 송장 템플릿 데이터 폼 -->
+          <div id="invoice-form-group" class="form-group active">
+            <div class="grid-2">
+              <div class="input-control">
+                <label>회사명 (발신)</label>
+                <input type="text" id="inv-company-name" value="주식회사 아트론">
+              </div>
+              <div class="input-control">
+                <label>부서/서브 타이틀</label>
+                <input type="text" id="inv-company-sub" value="AVIS-TRON SaaS 사업부">
+              </div>
+            </div>
+
+            <div class="grid-3">
+              <div class="input-control">
+                <label>청구 번호</label>
+                <input type="text" id="inv-number" value="INV-202606-184">
+              </div>
+              <div class="input-control">
+                <label>발행 일자</label>
+                <input type="date" id="inv-issue-date">
+              </div>
+              <div class="input-control">
+                <label>납부 기한</label>
+                <input type="date" id="inv-due-date">
+              </div>
+            </div>
+
+            <div class="section-divider">수신자 정보</div>
+            <div class="grid-2">
+              <div class="input-control">
+                <label>고객명</label>
+                <input type="text" id="inv-customer-name" value="(주)글로벌네트워크">
+              </div>
+              <div class="input-control">
+                <label>담당자</label>
+                <input type="text" id="inv-customer-contact" value="최주원 팀장">
+              </div>
+            </div>
+            <div class="input-control">
+              <label>이메일</label>
+              <input type="email" id="inv-customer-email" value="jw.choi@globalnet.co.kr">
+            </div>
+
+            <div class="section-divider">품목 정보 리스트</div>
+            <div class="items-table-wrapper">
+              <table id="invoice-items-table">
+                <thead>
+                  <tr>
+                    <th>품목명</th>
+                    <th style="width: 100px;">단가</th>
+                    <th style="width: 70px;">수량</th>
+                    <th style="width: 50px;">삭제</th>
+                  </tr>
+                </thead>
+                <tbody id="invoice-items-body">
+                  <!-- 동적 행 삽입 -->
+                </tbody>
+              </table>
+              <button id="add-item-btn" class="secondary-btn">+ 품목 추가</button>
+            </div>
+          </div>
+
+          <!-- 매출 보고서 템플릿 데이터 폼 -->
+          <div id="monthly_sales-form-group" class="form-group">
+            <div class="input-control">
+              <label>보고서 제목</label>
+              <input type="text" id="sales-title" value="2026년 상반기 매출 실적 보고서">
+            </div>
+            <div class="grid-2">
+              <div class="input-control">
+                <label>조회 기간</label>
+                <input type="text" id="sales-period" value="2026년 01월 ~ 2026년 06월">
+              </div>
+              <div class="input-control">
+                <label>작성 일자</label>
+                <input type="date" id="sales-date">
+              </div>
+            </div>
+
+            <div class="section-divider">월별 실적 데이터 (만 원 단위 입력)</div>
+            <div class="items-table-wrapper">
+              <table id="sales-data-table">
+                <thead>
+                  <tr>
+                    <th>연월</th>
+                    <th>매출액 (원)</th>
+                    <th style="width: 90px;">목표달성률</th>
+                    <th style="width: 90px;">전월대비</th>
+                  </tr>
+                </thead>
+                <tbody id="sales-data-body">
+                  <!-- 월별 6행 고정 에디터 -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- PDF 생성 및 다운로드 버튼 -->
+        <div class="action-panel">
+          <button id="generate-pdf-btn" class="primary-btn">
+            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <span>PDF 리포트 생성 및 조율</span>
+          </button>
+        </div>
+
+      </section>
+
+      <!-- 오른쪽: 뷰어/미리보기 패널 -->
+      <section class="viewer-section">
+        <div class="glass-card viewer-card">
+          <div class="viewer-header">
+            <h2>3. 실시간 PDF 인쇄 미리보기</h2>
+            <div class="status-badge" id="viewer-status">대기 중</div>
+          </div>
+          
+          <div class="preview-area">
+            <!-- 로더 상태 -->
+            <div class="loader-overlay" id="loader">
+              <div class="spinner"></div>
+              <p>Puppeteer 엔진이 PDF를 렌더링 중입니다...</p>
+            </div>
+            
+            <!-- 플레이스홀더 상태 -->
+            <div class="placeholder-state" id="placeholder">
+              <div class="placeholder-icon">📄</div>
+              <h3>PDF 미리보기 파일이 없습니다</h3>
+              <p>왼쪽 에디터에서 데이터를 수정한 후, 하단의 'PDF 리포트 생성' 버튼을 클릭하세요.</p>
+            </div>
+
+            <!-- PDF 뷰어 프레임 -->
+            <iframe id="pdf-viewer" class="pdf-frame"></iframe>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+  
+  <script src="client.js"></script>
+</body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>월간 매출 실적 보고서</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.6;
+      color: #333333;
+      background-color: #ffffff;
+      padding: 0;
+      margin: 0;
+    }
+
+    @page {
+      size: A4 portrait;
+      /* 위아래 여백을 주어 브라우저 고유 헤더/푸터 영역 공간 마련 */
+      margin: 25mm 15mm 20mm 15mm;
+    }
+
+    .report-container {
+      width: 100%;
+    }
+
+    /* 제목부 */
+    .report-header {
+      margin-bottom: 25px;
+      border-bottom: 2px solid #0f172a;
+      padding-bottom: 15px;
+    }
+
+    .report-header h1 {
+      font-size: 22pt;
+      font-weight: 700;
+      color: #0f172a;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .report-header .meta-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 9.5pt;
+      color: #475569;
+    }
+
+    /* 요약 카드 영역 */
+    .summary-grid {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .summary-card {
+      flex: 1;
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 12px 15px;
+      text-align: center;
+    }
+
+    .summary-card .label {
+      font-size: 9pt;
+      color: #64748b;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+
+    .summary-card .value {
+      font-size: 15pt;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .summary-card.highlight {
+      background-color: #f0f9ff;
+      border-color: #bae6fd;
+    }
+
+    .summary-card.highlight .label {
+      color: #0284c7;
+    }
+
+    .summary-card.highlight .value {
+      color: #0369a1;
+    }
+
+    /* 차트 섹션 */
+    .section-title {
+      font-size: 12pt;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 12px;
+      border-left: 4px solid #0284c7;
+      padding-left: 8px;
+    }
+
+    .chart-container {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 35px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #ffffff;
+    }
+
+    .chart-wrapper {
+      width: 100%;
+      max-width: 550px;
+    }
+
+    /* 테이블 섹션 */
+    .table-section {
+      margin-bottom: 30px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th {
+      background-color: #1e293b;
+      color: #ffffff;
+      font-weight: 500;
+      font-size: 9.5pt;
+      padding: 8px 10px;
+      border: 1px solid #334155;
+      text-align: center;
+    }
+
+    td {
+      padding: 8px 10px;
+      font-size: 9pt;
+      border: 1px solid #e2e8f0;
+      color: #334155;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+
+    tr {
+      break-inside: avoid;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .text-right {
+      text-align: right;
+    }
+
+    .text-bold {
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .trend-up {
+      color: #ef4444;
+      font-weight: 500;
+    }
+
+    .trend-down {
+      color: #3b82f6;
+      font-weight: 500;
+    }
+
+    /* 강제 페이지 넘김 */
+    .page-break {
+      page-break-before: always;
+      break-before: page;
+    }
+  </style>
+</head>
+<body>
+  <div class="report-container">
+    <!-- 리포트 헤더 -->
+    <div class="report-header">
+      <h1>{{reportTitle}}</h1>
+      <div class="meta-info">
+        <span><strong>조회 기간:</strong> {{period}}</span>
+        <span><strong>작성일:</strong> {{generatedDate}}</span>
+      </div>
+    </div>
+
+    <!-- 핵심 요약 지표 -->
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="label">총 누적 매출액</div>
+        <div class="value">₩{{summaryTotal}}</div>
+      </div>
+      <div class="summary-card highlight">
+        <div class="label">월 평균 매출액</div>
+        <div class="value">₩{{summaryAverage}}</div>
+      </div>
+      <div class="summary-card">
+        <div class="label">최고 매출 월</div>
+        <div class="value">{{summaryMaxMonth}}</div>
+      </div>
+    </div>
+
+    <!-- 매출 추이 그래프 -->
+    <div class="section-title">월별 매출 추이 (그래프)</div>
+    <div class="chart-container">
+      <div class="chart-wrapper">
+        {{chartSvg}}
+      </div>
+    </div>
+
+    <!-- 강제 페이지 브레이크: 상세 표는 2페이지부터 출력되도록 유도하여 깔끔하게 정리 -->
+    <div class="page-break"></div>
+
+    <!-- 매출 상세 테이블 -->
+    <div class="table-section">
+      <div class="section-title" style="margin-top: 15px;">월별 상세 실적표</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 15%">연월 (Month)</th>
+            <th style="width: 25%; text-align: right;">매출액 (Sales)</th>
+            <th style="width: 20%; text-align: right;">목표 대비 달성률</th>
+            <th style="width: 20%; text-align: right;">전월 대비 증감</th>
+            <th style="width: 20%">비고 (Remarks)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{tableRows}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

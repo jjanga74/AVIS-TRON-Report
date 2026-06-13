@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>송장 / Invoice</title>
+  <style>
+    /* Google Fonts 로드 */
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+
+    /* 기본 스타일 초기화 */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 11pt;
+      line-height: 1.5;
+      color: #333333;
+      background-color: #ffffff;
+      padding: 0;
+      margin: 0;
+    }
+
+    /* A4 용지 규격 설정 */
+    @page {
+      size: A4 portrait;
+      margin: 20mm 15mm 20mm 15mm;
+    }
+
+    /* 리포트 전체 컨테이너 */
+    .invoice-box {
+      width: 100%;
+      max-width: 100%;
+      margin: auto;
+      background: #ffffff;
+    }
+
+    /* 헤더 영역 */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 2px solid #3b82f6;
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+
+    .logo-area h1 {
+      font-size: 26pt;
+      font-weight: 700;
+      color: #1e3a8a;
+      letter-spacing: -1px;
+    }
+
+    .logo-area p {
+      font-size: 9pt;
+      color: #6b7280;
+      margin-top: 5px;
+    }
+
+    .meta-area {
+      text-align: right;
+    }
+
+    .meta-area h2 {
+      font-size: 16pt;
+      color: #1f2937;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+
+    .meta-table {
+      border-collapse: collapse;
+      margin-top: 5px;
+    }
+
+    .meta-table td {
+      padding: 2px 8px;
+      font-size: 9.5pt;
+    }
+
+    .meta-table td.label {
+      color: #6b7280;
+      font-weight: 500;
+    }
+
+    .meta-table td.value {
+      font-weight: 700;
+      color: #111827;
+    }
+
+    /* 거래처 정보 영역 */
+    .details {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      gap: 20px;
+    }
+
+    .details-box {
+      width: 48%;
+      background-color: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      padding: 15px;
+    }
+
+    .details-box h3 {
+      font-size: 10.5pt;
+      color: #3b82f6;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 5px;
+      font-weight: 700;
+    }
+
+    .details-box p {
+      font-size: 9.5pt;
+      margin-bottom: 4px;
+      color: #4b5563;
+    }
+
+    .details-box p strong {
+      color: #1f2937;
+    }
+
+    /* 테이블 영역 */
+    .table-container {
+      margin-bottom: 30px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f3f4f6;
+      color: #374151;
+      font-weight: 700;
+      font-size: 10pt;
+      padding: 10px 12px;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    td {
+      padding: 12px;
+      font-size: 9.5pt;
+      border-bottom: 1px solid #e5e7eb;
+      color: #4b5563;
+    }
+
+    tr {
+      break-inside: avoid;
+    }
+
+    /* 합계/총액 영역 */
+    .summary-area {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 20px;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .summary-table {
+      width: 300px;
+      border-collapse: collapse;
+    }
+
+    .summary-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .summary-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .summary-table td.label {
+      color: #6b7280;
+      font-weight: 500;
+      text-align: right;
+    }
+
+    .summary-table td.value {
+      text-align: right;
+      font-weight: 500;
+      color: #1f2937;
+    }
+
+    .summary-table tr.total td {
+      border-top: 2px solid #3b82f6;
+      background-color: #eff6ff;
+    }
+
+    .summary-table tr.total td.label {
+      color: #1e3a8a;
+      font-weight: 700;
+      font-size: 11pt;
+    }
+
+    .summary-table tr.total td.value {
+      color: #1d4ed8;
+      font-weight: 700;
+      font-size: 13pt;
+    }
+
+    /* 비고/약관 영역 */
+    .notes {
+      margin-top: 50px;
+      font-size: 8.5pt;
+      color: #9ca3af;
+      border-top: 1px dashed #e5e7eb;
+      padding-top: 15px;
+      line-height: 1.6;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .notes h4 {
+      font-size: 9pt;
+      color: #6b7280;
+      margin-bottom: 5px;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="invoice-box">
+    <!-- 헤더 -->
+    <div class="header">
+      <div class="logo-area">
+        <h1>{{companyName}}</h1>
+        <p>{{companySub}}</p>
+      </div>
+      <div class="meta-area">
+        <h2>INVOICE</h2>
+        <table class="meta-table">
+          <tr>
+            <td class="label">청구 번호:</td>
+            <td class="value">{{invoiceNumber}}</td>
+          </tr>
+          <tr>
+            <td class="label">발행 일자:</td>
+            <td class="value">{{issueDate}}</td>
+          </tr>
+          <tr>
+            <td class="label">납부 기한:</td>
+            <td class="value">{{dueDate}}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- 발신인/수신인 정보 -->
+    <div class="details">
+      <div class="details-box">
+        <h3>보내는 곳 (발신인)</h3>
+        <p><strong>상호명:</strong> {{companyName}}</p>
+        <p><strong>대표자:</strong> {{senderName}}</p>
+        <p><strong>주소:</strong> {{senderAddress}}</p>
+        <p><strong>연락처:</strong> {{senderPhone}}</p>
+      </div>
+      <div class="details-box">
+        <h3>받는 곳 (수신인)</h3>
+        <p><strong>고객명:</strong> {{customerName}}</p>
+        <p><strong>담당자:</strong> {{customerContact}}</p>
+        <p><strong>주소:</strong> {{customerAddress}}</p>
+        <p><strong>이메일:</strong> {{customerEmail}}</p>
+      </div>
+    </div>
+
+    <!-- 물품 상세 내역 -->
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 50%">품목명 및 규격</th>
+            <th style="width: 15%; text-align: right;">단가</th>
+            <th style="width: 15%; text-align: right;">수량</th>
+            <th style="width: 20%; text-align: right;">공급가액</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{items}}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 결제 합계 금액 -->
+    <div class="summary-area">
+      <table class="summary-table">
+        <tr>
+          <td class="label">소계:</td>
+          <td class="value">₩{{subtotal}}</td>
+        </tr>
+        <tr>
+          <td class="label">세액 (10%):</td>
+          <td class="value">₩{{tax}}</td>
+        </tr>
+        <tr class="total">
+          <td class="label">합계 금액 (총액):</td>
+          <td class="value">₩{{total}}</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- 하단 비고란 -->
+    <div class="notes">
+      <h4>안내 사항 (Terms & Conditions)</h4>
+      <p>1. 본 청구서의 금액은 영업일 기준 7일 이내에 지정된 계좌로 입금해 주시기 바랍니다.</p>
+      <p>2. 계좌 정보: 신한은행 100-123-456789 (예금주: {{companyName}})</p>
+      <p>3. 청구 금액 관련 문의사항이 있으시면 고객센터({{senderPhone}}) 또는 이메일로 연락 주시기 바랍니다.</p>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "reporting-service",
+  "version": "1.0.0",
+  "description": "Server-side PDF reporting service using Express and Puppeteer",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^4.19.2",
+    "puppeteer": "^22.10.0"
+  }
+}
