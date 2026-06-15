@@ -4,6 +4,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import cors from 'cors';
+import os from 'os';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -370,9 +371,29 @@ app.post('/api/generate-pdf-from-html', async (req, res) => {
   }
 });
 
+// 네트워크 인터페이스에서 IPv4 주소 추출
+function getLocalIps() {
+  const interfaces = os.networkInterfaces();
+  const ips = [];
+  for (const name of Object.keys(interfaces)) {
+    for (const iface of interfaces[name]) {
+      if (iface.family === 'IPv4' && !iface.internal) {
+        ips.push(iface.address);
+      }
+    }
+  }
+  return ips;
+}
+
 // 서버 기동
-app.listen(PORT, () => {
+const HOST = '0.0.0.0';
+app.listen(PORT, HOST, () => {
+  const ips = getLocalIps();
   console.log(`=======================================================`);
-  console.log(` PDF Reporting Server is running on: http://localhost:${PORT}`);
+  console.log(` PDF Reporting Server is running on:`);
+  console.log(` - Local:   http://localhost:${PORT}`);
+  ips.forEach(ip => {
+    console.log(` - Network: http://${ip}:${PORT}`);
+  });
   console.log(`=======================================================`);
 });
