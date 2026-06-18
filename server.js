@@ -100,7 +100,7 @@ function generateChartSvg(data) {
 
 // PDF 생성 API 엔드포인트
 app.post('/api/generate-pdf', async (req, res) => {
-  const { templateName, data } = req.body;
+  const { templateName, data, orientation } = req.body;
   
   if (!templateName || !data) {
     return res.status(400).json({ error: '필수 파라미터(templateName, data)가 누락되었습니다.' });
@@ -111,6 +111,12 @@ app.post('/api/generate-pdf', async (req, res) => {
     // 1. 템플릿 파일 읽기
     const templatePath = path.join(__dirname, 'templates', `${templateName}.html`);
     let htmlContent = await fs.readFile(templatePath, 'utf8');
+
+    // orientation이 landscape인 경우 HTML 내의 @page 설정을 가로 방향으로 변경하고 body에 landscape 클래스 주입
+    if (orientation === 'landscape') {
+      htmlContent = htmlContent.replace('size: A4 portrait;', 'size: A4 landscape;');
+      htmlContent = htmlContent.replace(/<body/i, '<body class="landscape"');
+    }
 
     // 2. 데이터 컴파일 (간단한 플레이스홀더 치환)
     if (templateName === 'invoice') {
@@ -203,6 +209,7 @@ app.post('/api/generate-pdf', async (req, res) => {
     // PDF 생성 옵션
     const pdfBuffer = await page.pdf({
       format: 'A4',
+      landscape: orientation === 'landscape',
       printBackground: true,
       displayHeaderFooter: true,
       headerTemplate: `
@@ -242,7 +249,7 @@ app.post('/api/generate-pdf', async (req, res) => {
 
 // HTML 데이터를 받아서 즉석에서 고정밀 A4 PDF로 변환해 주는 범용 API 엔드포인트
 app.post('/api/generate-pdf-from-html', async (req, res) => {
-  const { html, title, style } = req.body;
+  const { html, title, style, orientation } = req.body;
   
   if (!html) {
     return res.status(400).json({ error: '인쇄할 HTML 내용(html)이 없습니다.' });
@@ -271,7 +278,7 @@ app.post('/api/generate-pdf-from-html', async (req, res) => {
             background-color: #ffffff;
           }
           @page {
-            size: A4 portrait;
+            size: A4 ${orientation === 'landscape' ? 'landscape' : 'portrait'};
             margin: 25mm 15mm 20mm 15mm;
           }
           h1, h2, h3, h4, h5, h6 {
@@ -316,7 +323,7 @@ app.post('/api/generate-pdf-from-html', async (req, res) => {
           ${style || ''}
         </style>
       </head>
-      <body>
+      <body class="${orientation === 'landscape' ? 'landscape' : ''}">
         <div style="padding: 10px;">
           <h1 style="font-size: 18pt; font-weight: 700; text-align: center; margin-bottom: 25px; border-bottom: 2px solid #0f172a; padding-bottom: 15px;">
             ${title || '보안 신청서 기안내역'}
@@ -335,6 +342,7 @@ app.post('/api/generate-pdf-from-html', async (req, res) => {
 
     const pdfBuffer = await page.pdf({
       format: 'A4',
+      landscape: orientation === 'landscape',
       printBackground: true,
       displayHeaderFooter: true,
       headerTemplate: `

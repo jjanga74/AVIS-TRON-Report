@@ -1,6 +1,6 @@
-# TRON PDF Reporting Service 기술 설계서 (Technical Specification)
+# AVIS-TRON PDF Reporting Service 기술 설계서 (Technical Specification)
 
-본 문서는 **TRON PDF Reporting Service**의 아키텍처, 컴포넌트 설계, 성능 최적화 모델 및 배포 가이드를 서술하는 핵심 개발자 기술 문서입니다.
+본 문서는 **AVIS-TRON PDF Reporting Service**의 아키텍처, 컴포넌트 설계, 성능 최적화 모델 및 배포 가이드를 서술하는 핵심 개발자 기술 문서입니다.
 
 ---
 
@@ -51,8 +51,8 @@
 ### 2.2. 인쇄 제어용 Paged Media CSS 표준 명세
 Puppeteer 엔진이 문서를 나눌 때 활용하는 특수 CSS 규칙은 다음과 같이 설정되어 있습니다.
 
-*   `@page { size: A4 portrait; margin: 25mm 15mm 20mm 15mm; }`
-    A4 표준 여백을 강제하여 프린터 드라이버나 브라우저 기본 여백이 미치는 부작용을 제거합니다.
+*   `@page { size: A4 portrait; margin: 25mm 15mm 20mm 15mm; }` (세로 모드) / `@page { size: A4 landscape; margin: 25mm 15mm 20mm 15mm; }` (가로 모드)
+    인쇄 방향에 맞추어 `@page` 규칙의 크기 설정을 동적으로 변경하고, `<body>` 태그에 `landscape` 클래스를 주입합니다. 이를 통해 CSS 레벨에서 가로 방향 전용 레이아웃을 반응형으로 정의할 수 있습니다.
 *   `thead { display: table-header-group; }`
     긴 테이블 데이터가 인쇄 용지를 넘어설 때 다음 페이지의 맨 위에 컬럼 제목줄을 자동으로 반복 렌더링해 줍니다.
 *   `tr { break-inside: avoid; }`

@@ -206,13 +206,13 @@ body {
   gap: 8px;
 }
 
-/* 템플릿 선택 탭 */
-.template-selector {
+/* 템플릿 및 방향 선택 탭 */
+.template-selector, .orientation-selector {
   display: flex;
   gap: 12px;
 }
 
-.template-tab {
+.template-tab, .orientation-tab {
   flex: 1;
   background: var(--input-bg);
   border: 1px solid var(--input-border);
@@ -227,12 +227,12 @@ body {
   transition: var(--transition);
 }
 
-.template-tab:hover {
+.template-tab:hover, .orientation-tab:hover {
   border-color: var(--accent);
   transform: translateY(-2px);
 }
 
-.template-tab.active {
+.template-tab.active, .orientation-tab.active {
   border-color: var(--accent);
   background: rgba(2, 132, 199, 0.08);
   box-shadow: 0 0 15px rgba(2, 132, 199, 0.15) inset;

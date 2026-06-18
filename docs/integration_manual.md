@@ -1,6 +1,6 @@
-# TRON PDF Reporting Service 외부 연동 규격서 (API Integration Manual)
+# AVIS-TRON PDF Reporting Service 외부 연동 규격서 (API Integration Manual)
 
-본 문서는 타 시스템(외부 웹 애플리케이션, 레거시 백엔드, 타 마이크로서비스 등)에서 **TRON PDF Reporting Service**를 연동하여 고정밀 PDF 파일을 생성 및 다운로드하기 위한 REST API 규격과 주요 개발 언어별 연동 예제를 제공합니다.
+본 문서는 타 시스템(외부 웹 애플리케이션, 레거시 백엔드, 타 마이크로서비스 등)에서 **AVIS-TRON PDF Reporting Service**를 연동하여 고정밀 PDF 파일을 생성 및 다운로드하기 위한 REST API 규격과 주요 개발 언어별 연동 예제를 제공합니다.
 
 ---
 
@@ -18,7 +18,8 @@
 {
   "html": "string",
   "title": "string",
-  "style": "string"
+  "style": "string",
+  "orientation": "string"
 }
 ```
 
@@ -27,6 +28,7 @@
 | **html** | String | **필수 (Required)** | PDF 본문 영역에 렌더링할 순수 HTML 마크업 문자열 (예: `<table>...</table>`) |
 | **title** | String | 선택 (Optional) | 문서 상단 머리글(Header) 및 다운로드 파일명에 매핑할 리포트의 제목 |
 | **style** | String | 선택 (Optional) | 본문 HTML에 결합할 전역 CSS 스타일시트 (Tailwind CSS 컴파일 결과물 또는 커스텀 디자인 규칙) |
+| **orientation** | String | 선택 (Optional) | 문서 출력 방향 (`portrait` 또는 `landscape`, 기본값: `portrait`) |
 
 ### 1.3. 응답 규격 (Response Specification)
 *   **성공 시 (Status 200 OK):**
@@ -59,7 +61,8 @@ async function downloadServerPDF(elementId, docTitle) {
       body: JSON.stringify({
         html: targetElement.outerHTML,
         title: docTitle,
-        style: compiledStyles
+        style: compiledStyles,
+        orientation: 'landscape' // 가로 인쇄 모드인 경우 'landscape' 지정
       })
     });
 
@@ -107,7 +110,8 @@ public class PdfIntegrationService {
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("html", htmlContent);
         requestBody.put("title", docTitle);
-        requestBody.put("style", "table { border: 1px solid black; }"); // 필요시 커스텀 스타일 기입
+        requestBody.put("style", "table { border: 1px solid black; }"); 
+        requestBody.put("orientation", "landscape"); // 가로 출력시 설정
 
         HttpEntity<Map<String, String>> request = new HttpEntity<>(requestBody, headers);
 
@@ -153,7 +157,8 @@ public class PdfExporter
         {
             html = html,
             title = title,
-            style = "body { margin: 10px; }"
+            style = "body { margin: 10px; }",
+            orientation = "landscape"
         };
 
         var json = JsonSerializer.Serialize(payload);
@@ -189,7 +194,8 @@ def generate_pdf(html_markup, title):
     payload = {
         "html": html_markup,
         "title": title,
-        "style": "h1 { color: darkblue; }"
+        "style": "h1 { color: darkblue; }",
+        "orientation": "landscape"
     }
     
     try:

@@ -43,6 +43,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // --- 인쇄 방향 탭 전환 ---
+  let activeOrientation = 'portrait';
+  const orientationTabs = document.querySelectorAll('.orientation-tab');
+
+  orientationTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      orientationTabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      activeOrientation = tab.getAttribute('data-orientation');
+    });
+  });
+
   // --- [송장] 품목 동적 테이블 관리 ---
   let invoiceItems = [
     { name: 'AVIS-TRON Core SaaS 라이센스', price: 1200000, quantity: 2, description: '클라우드 엔터프라이즈 에디션 (1년 약정)' },
@@ -188,6 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. 현재 선택된 템플릿과 그에 맞는 데이터 수집
     let payload = {
       templateName: activeTemplate,
+      orientation: activeOrientation,
       data: {}
     };
 
